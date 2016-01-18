@@ -1,0 +1,86 @@
+{% extends 'main/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    {{ album.title }}
+{% endblock %}
+{% block content %}
+    <form role="form" method="post" id="subscribe">
+        {{ subscribeForm.hidden_tag() }}
+        <h1 class="page-header text-center">
+            {{ album.title }}
+            <label class="pull-right" data-toggle="tooltip" data-placement="bottom" title="专辑拥有者将会抽取文章 <code>{{ album.percentage * 100 }}%</code> 的佣金。">
+                {% if current_user.is_user() %}
+                    <a class="btn btn-lg btn-primary disabled" style="margin-right: 10px" href="#"><i class="glyphicon glyphicon-pencil"> </i> 投稿</a>
+                {% else %}
+                    <a class="btn btn-lg btn-primary" style="margin-right: 10px" href="{{ url_for('auth.write_article', album_id=album.id) }}"><i class="glyphicon glyphicon-pencil"> </i> 投稿</a>
+                {% endif %}
+            </label>
+            <div class="lead text-left">
+                <br>
+                <p style="text-indent: 2em">
+                    {{ album.introduction }}
+                </p>
+                <br>
+                <div class="small">
+                    <a href="{{ url_for('main.user', username=album.creator.username) }}" title="作者"><span class="label label-success"><i class="glyphicon glyphicon-user"></i> {{ album.creator.username }}</span></a>
+                    <span class="label label-primary" title="文章总数"><i class="glyphicon glyphicon-book"></i> {{ post_confirmed_nums }}</span>
+                    <span class="label label-default" title="创建时间"><i class="glyphicon glyphicon-calendar"></i> {{ moment(album.timestamp).format('LL') }}</span>
+                    {% if current_user.is_subscribing(album=album) or album.is_creator(current_user)%}
+                        <a class="btn btn-xs btn-default disabled pull-right" href="javascript:void(0)"><i class="glyphicon glyphicon-bookmark"></i> 订阅</a>
+                    {% else %}
+                        <a class="btn btn-xs btn-primary pull-right" href="javascript:void(0)" onclick="$('#subscribe').submit()"><i class="glyphicon glyphicon-bookmark"></i> 订阅</a>
+                    {% endif %}
+                </div>
+            </div>
+        </h1>
+    </form>
+    {% for article in album.all_true_posts.items %}        
+        <div class="panel text-left">
+            <div class="panel-body">
+                <div class="col-xs-12 col-md-3 col-lg-2">
+                    <a href="{{ url_for('main.user', username=article.author.username) }}" title="{{ article.author.username }}">
+                        <img class="img-circle" src="{{ article.author.gravatar(size=256) }}" style="height: 90px">
+                    </a>
+                </div>
+                <div class="col-xs-12 col-md-8 col-lg-8">
+                    <a href="{{ url_for('main.post', post_id=article.id) }}"> <h4>{{ article.title }}</h4>
+                    <p style="text-indent: 2em">
+                        {{ article.body_html|striptags|truncate(length=200, killwords=False, end="......") }}
+                    </p></a>
+                    <span class="label label-default" title="创建时间"><i class="glyphicon glyphicon-calendar"></i> {{ moment(article.timestamp).format('LL') }}</span>
+                </div>
+                 <div class="col-xs-12 col-md-1 col-lg-1">
+                     <div class="col-lg-12" style="margin-top: 10px" title="收藏数"><span class="label label-warning"><i class="glyphicon glyphicon-star"></i> {{ article.my_collected }} </span></div>
+                     <div class="col-lg-12" style="margin-top: 30px" title="价格"><span class="label label-danger"><i class="glyphicon glyphicon-thumbs-up"></i> {{ article.price|replace(0.0, '免费') }}</span></div>
+                 </div>
+            </div>
+        </div>        
+    {% endfor %}
+    <!-- pagination 分页 -->
+    <nav class="text-center">
+        <ul class="pagination">
+            <li {% if not album.all_true_posts.has_prev %}class="disabled"{% endif %}>
+                <a href="{% if album.all_true_posts.has_prev %}{{ url_for('.album', album_id=album.id, page=album.all_true_posts.page - 1) }}{% else %}#{% endif %}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% for p in album.all_true_posts.iter_pages() %}
+            {% if p %}
+                {% if p == album.all_true_posts.page %}
+                <li class="active"><a href="{{ url_for('.album', album_id=album.id, page=p) }}">{{ p }}</a></li>
+                {% else %}
+                <li><a href="{{ url_for('.album', album_id=album.id, page=p) }}">{{ p }}</a></li>
+                {% endif %}
+            {% else %}
+            <li class="disabled"><a href="#">&hellip;</a></li>
+            {% endif %}
+            {% endfor %}
+            <li {% if not album.all_true_posts.has_next %}class="disabled"{% endif %}>
+                <a href="{% if album.all_true_posts.has_next %}{{ url_for('.album', album_id=album.id, page=album.all_true_posts.page + 1) }}{% else %}#{% endif %}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <!-- end pagination 分页 -->
+{% endblock %}

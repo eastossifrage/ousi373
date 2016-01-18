@@ -1,0 +1,86 @@
+{% extends 'auth/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    文章管理
+{% endblock %}
+{% block content %}
+    <h1 class="page-header">
+        我的文章
+    </h1>
+    {% for post in posts.items %}
+        <div class="panel">
+            <div class="panel-body">
+                <div class="col-xs-12 col-md-3 col-lg-2">
+                    <a href="{{ url_for('main.album', album_id=post.album.id) }}">
+                        <img  class="img-circle" src="{{ url_for('static', filename="uploads/album/%s" % post.album.picture_url) }}" alt="" style="height: 100px">
+                    </a>
+                </div>
+                <div class="col-xs-12 col-md-9 col-lg-8">
+                    <h5><a href="{{ url_for('main.post', post_id=post.id) }}"> {{ post.title }}</a>
+                        {% if post.disabled %}
+                            <span class="label label-default pull-right">文章已注销</span>
+                        {% elif not post.confirmed %}
+                            <span class="label label-default pull-right">审核未通过</span>
+                        {% else %}
+                            <span class="label label-success pull-right">审核已通过</span>
+                        {% endif %}
+                    </h5>
+                    <p class="small" style="text-indent: 2em">
+                        {{ post.body_html|striptags|truncate(length=200, killwords=False, end="......") }}
+                    </p>
+                    <span class="label label-warning">{{ post.my_collected }} 收藏</span>
+                    <span class="label label-danger"><i class="glyphicon glyphicon-yen"></i> {{ post.price|replace(0.0, '免费') }}</span>
+                    <span class="label label-default" title="创建时间"><i class="glyphicon glyphicon-calendar"></i> {{ moment(post.timestamp).format('LL') }}</span>
+                </div>
+                 <div class="col-xs-12 col-md-3 col-lg-2">
+                     <div class="btn-group" style="margin-top: 30px">
+                         {% if post.disabled %}
+                             <a class="btn btn-xs btn-primary disabled" href="javascript:void(0)"><i class="glyphicon glyphicon-pencil"></i> | 修改</a>
+                             <a class="btn btn-xs btn-primary disabled" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-container="body" data-placement="bottom" data-content="<ul class='nav nav-pills nav-stacked'><li  role='presentation'><a href='javascript:void(0)' role='menuitem' tabindex='-1'>注销</a></li></ul>"><i class="glyphicon glyphicon-list"></i></a>
+                         {% else %}
+                             <a class="btn btn-xs btn-primary" href="{{ url_for('auth.edit_article', post_id=post.id) }}"><i class="glyphicon glyphicon-pencil"></i> | 修改</a>
+                             <a class="btn btn-xs btn-primary" tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-container="body" data-placement="bottom" data-content="<ul class='nav nav-pills nav-stacked'><li  role='presentation'><a href='javascript:void(0)' onclick='submit_form_{{ post.id }}()' role='menuitem' tabindex='-1'>注销</a></li></ul>"><i class="glyphicon glyphicon-list"></i></a>
+                             <form name="myForm_{{ post.id }}" role="form" method="post">
+                                {{ offPostForm.hidden_tag() }}
+                                {{ offPostForm.post_id(value=post.id, class="hidden") }}
+                             </form>
+                             <script type="text/javascript">
+                                 function submit_form_{{ post.id }}()
+                                 {
+                                     document.myForm_{{ post.id }}.submit();
+                                 }
+                             </script>
+                         {% endif %}
+                     </div>
+                 </div>
+            </div>
+        </div>
+    {% endfor %}
+    <!-- pagination 分页 -->
+    <nav class="text-center">
+        <ul class="pagination">
+            <li {% if not posts.has_prev %}class="disabled"{% endif %}>
+                <a href="{% if posts.has_prev %}{{ url_for('.my_articles', page=posts.page - 1) }}{% else %}#{% endif %}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% for p in posts.iter_pages() %}
+                {% if p %}
+                    {% if p == posts.page %}
+                    <li class="active"><a href="{{ url_for('.my_articles', page=p) }}">{{ p }}</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('.my_articles', page=p) }}">{{ p }}</a></li>
+                    {% endif %}
+                {% else %}
+                <li class="disabled"><a href="#">&hellip;</a></li>
+                {% endif %}
+            {% endfor %}
+            <li {% if not posts.has_next %}class="disabled"{% endif %}>
+                <a href="{% if posts.has_next %}{{ url_for('.my_articles', page=posts.page + 1) }}{% else %}#{% endif %}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <!-- end pagination 分页 -->
+{% endblock %}

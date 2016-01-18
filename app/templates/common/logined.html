@@ -1,0 +1,7 @@
+<ul class="nav navbar-nav navbar-right">
+    {% if current_user.is_authenticated() %}
+        <li><p class="navbar-text"> <a href="{{ url_for('auth.index') }}">{{ current_user.username }}</a> | <a href="{{ url_for('auth.logout') }}">注销</a></p></li>
+    {% else %}
+        <li><p class="navbar-text"> <a href="{{ url_for('auth.login') }}"> 登录</a> | <a href="{{ url_for('auth.register') }}">注册</a></p></li>
+    {% endif %}
+</ul>

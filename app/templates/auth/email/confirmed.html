@@ -1,0 +1,52 @@
+{% extends 'main/common/base.html' %}
+{% block js %}
+    {{ super() }}
+    <script>
+        $(document).ready(function() {
+            function jump(count) {
+                window.setTimeout(function(){
+                    count--;
+                    if(count > 0) {
+                        $('#num').html(count);
+                        jump(count);
+                    } else {
+                        location.href="{{ url_for('main.index') }}";
+                    }
+                }, 1000);
+            }
+            jump(10);
+        });
+    </script>
+{% endblock %}
+{% block title %}
+    {{ super() }}
+    注册确认
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="page-header">
+                        <h1>
+                            尊敬的 {{ current_user.username }}
+                        </h1>
+                        <h3>
+                            欢迎来到藕丝空间。
+                        </h3>
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <div class="message">
+                                        <p>{{ message }}</p>
+                                        <p>页面将在<code id="num"></code> 秒后跳转至主页，如无法跳转，请点击 <a class="btn btn-sm btn-primary" href="{{ url_for('main.index') }}"> 主页</a></p>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

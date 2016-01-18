@@ -1,0 +1,23 @@
+{% extends 'main/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    500错误
+{% endblock %}
+{% block content %}
+   <div class="container">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="page-header">
+                        <h1>
+                            尊敬的 {{ current_user.username }}
+                        </h1>
+                        <h3>
+                            <code>您遇到了500错误。请返回。</code>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

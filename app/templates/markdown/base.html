@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head lang="zh">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="谦卑并倔强的活着！">
+    <meta name="author" content="东方鹗">
+    {% block favicon %}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    {% endblock %}
+    <title>{% block title %}藕丝空间——{% endblock %}</title>
+    {% block css %}
+        <!-- Bootstrap 核心 CSS -->
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}" rel="stylesheet">
+        <!-- 自主样式 -->
+        <link href="{{ url_for('static', filename='css/ousi-md.css') }}" rel="stylesheet">
+    {% endblock %}
+</head>
+<body>
+    {% include 'markdown/header.html' %}
+    {% block markdown %}
+
+    {% endblock %}
+    {% block js %}
+        <!-- Bootstrap 核心Javascript文件
+        ===========================================================================  -->
+        <!-- 将Javascript 文件放置于文件末尾，会提高网页加载速度。 -->
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+        {{ moment.include_moment(local_js=url_for('static', filename='js/moment-with-locales.js')) }}
+        {{ moment.lang('zh-cn') }}
+        <script src="{{ url_for('static', filename='js/ousi-base.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/marked.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/ousi-md.js') }}"></script>
+    {% endblock %}
+</body>
+</html>

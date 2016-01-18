@@ -1,0 +1,91 @@
+{% extends 'auth/common/auditing-base.html' %}
+{% block title %}
+    {{ super() }}
+    {{ album.title }}
+{% endblock %}
+{% block content %}
+    <div class="container content">
+        <br>
+        <blockquote class="blockquote-reverse">
+            <strong>分成比例为：</strong>
+            <p style="text-indent: 2em">
+                文章作者：<code>{{ (1 - album.percentage) * 100 }}%</code>；专辑作者：<code>{{ album.percentage * 100 }}%</code>
+            </p>
+        </blockquote>
+        <h1 class="page-header">
+            {% if album.disabled %}
+                <label class="alert-danger" data-toggle="tooltip" data-placement="top" title="文章已注销">{{ album.title }}</label>
+            {% elif not album.confirmed %}
+                <label class="alert-danger" data-toggle="tooltip" data-placement="top" title="审核未通过">{{ album.title }}</label>
+            {% else %}
+                <label class="alert-success" data-toggle="tooltip" data-placement="top" title="审核已通过">{{ album.title }}</label>
+            {% endif %}
+        </h1>
+        <div class="lead text-left">
+            <br>
+            <p style="text-indent: 2em">
+                {{ album.introduction }}
+            </p>
+            <br>
+            <div class="small">
+                <a href="{{ url_for('main.user', username=album.creator.username) }}" title="作者"><span class="label label-success"><i class="glyphicon glyphicon-user"></i> {{ album.creator.username }}</span></a>
+                <span class="label label-default" title="创建时间"><i class="glyphicon glyphicon-calendar"></i> {{ moment(album.timestamp).format('LL') }}</span>
+            </div>
+        </div>
+        <div class="OnlineService_Bg">
+            <div class="OnlineService_Box">
+                {% if not album.confirmed %}
+                <div class="text-center">
+                    <form name="myAdoptForm" role="form" method="post">
+                        {{ adoptAlbumForm.hidden_tag() }}
+                        <a class="btn btn-sm btn-success" onclick="submit_adopt_form()"><h1><i class="glyphicon glyphicon-ok"></i></h1>
+                        审核通过</a>
+                    </form>
+                    <script type="text/javascript">
+                        function submit_adopt_form()
+                        {
+                          document.myAdoptForm.submit();
+                        }
+                    </script>
+                </div>
+                <div class="text-center">
+                    <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#rejectModal"><h1><i class="glyphicon glyphicon-remove"></i></h1>
+                    驳回申请</a>
+                </div>
+                {% else %}
+                <div class="text-center">
+                    <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#rejectModal"><h1><i class="glyphicon glyphicon-remove"></i></h1>
+                    驳回申请</a>
+                </div>
+                {% endif %}
+                <div class="text-center">
+                    <a href="#" class="btn btn-sm btn-default"><h1><i class="glyphicon glyphicon-arrow-up"></i></h1>
+                    返回顶部</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form name="myRejectForm" role="form" method="post">
+                    {{ rejectAlbumForm.hidden_tag() }}
+                    <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="rejectModalLabel">驳回请求</h4>
+                    </div>
+                    <div class="modal-body">
+                        {{ rejectAlbumForm.title(class='form-control', value='《' + album.title + '》发表请求被驳回', style='margin-bottom: 10px') }}
+                        {{ rejectAlbumForm.content(class='form-control') }}
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    {{ rejectAlbumForm.submit(class='btn btn-default',style='margin-top: 0') }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

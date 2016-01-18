@@ -1,0 +1,43 @@
+<div class="col-sm-3 col-md-2 sidebar">
+    {% if current_user.is_user() %}
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="javascript:void(0)">一般用户功能</a></li>
+            <li><a href="{{ url_for('auth.my_collects') }}"><i class="glyphicon glyphicon-tag"></i> 我的收藏</a></li>
+            <li><a href="{{ url_for('auth.my_subscribes') }}"><i class="glyphicon glyphicon-bookmark"></i> 我的订阅</a></li>
+            <li><a href="{{ url_for('auth.my_messages') }}"><i class="glyphicon glyphicon-comment"></i> 我的消息</a></li>
+        </ul>
+    {% elif current_user.is_real_user() %}
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="javascript:void(0)">认证用户功能</a></li>
+            <li><a href="{{ url_for('auth.my_articles') }}"><i class="glyphicon glyphicon-file"></i> 我的文章</a></li>
+            <li><a href="{{ url_for('auth.my_albums') }}"><i class="glyphicon glyphicon-book"></i> 我的专辑</a></li>
+            <li><a href="{{ url_for('auth.my_collects') }}"><i class="glyphicon glyphicon-tag"></i> 我的收藏</a></li>
+            <li><a href="{{ url_for('auth.my_subscribes') }}"><i class="glyphicon glyphicon-bookmark"></i> 我的订阅</a></li>
+            <li><a href="{{ url_for('auth.my_messages') }}"><i class="glyphicon glyphicon-comment"></i> 我的消息</a></li>
+        </ul>
+    {% elif current_user.is_moderator() %}
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="javascript:void(0)">协管员功能</a></li>
+            <li><a href="{{ url_for('auth.users') }}"><i class="glyphicon glyphicon-user small"><i class="glyphicon glyphicon-user"></i></i> 用户管理</a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-bullhorn"></i> 公告管理</a></li>
+            <li><a href="{{ url_for('auth.albums') }}"><i class="glyphicon glyphicon-book"></i> 专辑管理</a></li>
+            <li><a href="{{ url_for('auth.articles') }}"><i class="glyphicon glyphicon-file"></i> 文章管理</a></li>
+            <li><a href="{{ url_for('auth.my_messages') }}"><i class="glyphicon glyphicon-comment"></i> 消息管理</a></li>
+        </ul>
+    {% elif current_user.is_administrator() %}
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="javascript:void(0)">管理员功能</a></li>
+            <li><a href="{{ url_for('auth.users') }}"><i class="glyphicon glyphicon-user small"><i class="glyphicon glyphicon-user"></i></i> 用户管理</a></li>
+            <li><a href="#"><i class="glyphicon glyphicon-bullhorn"></i> 公告管理</a></li>
+            <li><a href="{{ url_for('auth.albums') }}"><i class="glyphicon glyphicon-book"></i> 专辑管理</a></li>
+            <li><a href="{{ url_for('auth.articles') }}"><i class="glyphicon glyphicon-file"></i> 文章管理</a></li>
+            <li><a href="{{ url_for('auth.my_messages') }}"><i class="glyphicon glyphicon-comment"></i> 消息管理</a></li>
+        </ul>
+    {% endif %}
+    <ul class="nav nav-sidebar">
+        <li class="active"><a href="javascript:void(0)">基本功能</a></li>
+        <li><a href="{{ url_for('auth.change_password') }}"><i class="glyphicon glyphicon-lock"></i> 修改密码</a></li>
+        <li><a href="{{ url_for('auth.change_username') }}"><i class="glyphicon glyphicon-user"></i> 修改昵称</a></li>
+        <li><a href="{{ url_for('auth.change_email_request') }}"><i class="glyphicon glyphicon-envelope"></i> 修改邮箱</a></li>
+    </ul>
+</div>

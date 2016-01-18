@@ -1,0 +1,42 @@
+{% extends 'main/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    {{ user.username }}的资料
+{% endblock %}
+{% block content %}
+    <div class="log-reg">
+        {% if user.is_user() %}
+            <img class="img-circle" src="{{ user.gravatar(size=256) }}" style="width: 90px; height: 90px">
+            <h3>{{ user.username }}<span class="badge">一般用户</span></h3>
+            <p class="small">注册时间：{{ moment(user.member_since).format('LLL') }}</p>
+            <p class="small">最后登录时间：{{ moment(user.last_seen).fromNow(refresh=True) }}</p>
+        {% elif user.is_real_user() %}
+            <img class="img-circle" src="{{ user.gravatar(size=256) }}" style="width: 90px; height: 90px">
+            <h3>{{ user.username }}<span class="badge">认证用户</span></h3>
+            <p>真实姓名：<strong>{{ user.name|replace(None, '') }}</strong></p>
+            <p class="small">注册时间：{{ moment(user.member_since).format('LLL') }}</p>
+            <p class="small">最后登录时间：{{ moment(user.last_seen).fromNow(refresh=True) }}</p>
+            <P>个人简介：{{ user.about_me|replace(None, '') }}</P>
+            <p>文章数量：<code>{{ user.my_posts|length }}</code></p>
+            <strong>参与的专辑</strong>
+            {% for album in my_albums %}
+                <p><a href="{{ url_for('main.album', album_id=album.id) }}">《{{ album.title }}》</a><span class="badge">原创</span></p>
+            {% endfor %}
+            {% for joined_album in joined_albums %}
+                <p><a href="{{ url_for('main.album', album_id=joined_album.id) }}">《{{ joined_album.title }}》</a></p>
+            {% endfor %}
+        {% elif user.is_moderator() %}
+            <img class="img-circle" src="{{ user.gravatar(size=256) }}" style="width: 90px; height: 90px">
+            <h3>{{ user.username }}<span class="badge">协管员</span></h3>
+            <p>真实姓名：<strong>{{ user.name|replace(None, '') }}</strong></p>
+            个人简介：
+            <P class="small">{{ user.about_me|replace(None, '') }}</P>
+        {% elif user.is_administrator() %}
+            <img class="img-circle" src="{{ user.gravatar(size=256) }}" style="width: 90px; height: 90px">
+            <h3>{{ user.username }}<span class="badge">管理员</span></h3>
+            <p>真实姓名：<strong>{{ user.name|replace(None, '') }}</strong></p>
+            个人简介：
+            <P class="small">{{ user.about_me|replace(None, '这家伙很懒，什么都没有留下......') }}</P>
+        {% endif %}
+    </div>
+{% endblock %}

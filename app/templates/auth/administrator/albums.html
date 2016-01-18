@@ -1,0 +1,94 @@
+{% extends 'auth/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    专辑管理
+{% endblock %}
+{% block content %}
+    <h1 class="page-header">
+        专辑管理
+    </h1>
+    {% for album in albums.items %}
+        <div class="panel">
+            <div class="panel-body">
+                <div class="col-xs-12 col-md-3 col-lg-2">
+                    {% if album.disabled %}
+                        <a href="javascript:void(0)" target="_blank" title="专辑已注销">
+                            <img  class="img-circle" src="{{ url_for('static', filename="uploads/album/%s" % album.picture_url) }}" style="height: 100px">
+                        </a>
+                    {% elif not album.confirmed %}
+                        <a href="javascript:void(0)" target="_blank" title="审核未通过">
+                            <img  class="img-circle" src="{{ url_for('static', filename="uploads/album/%s" % album.picture_url) }}" style="height: 100px">
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('main.album', album_id=album.id) }}" target="_blank" title="{{ album.title }}">
+                            <img  class="img-circle" src="{{ url_for('static', filename="uploads/album/%s" % album.picture_url) }}" style="height: 100px">
+                        </a>
+                    {% endif %}
+                </div>
+                <div class="col-xs-12 col-md-9 col-lg-8">
+                    <h5>
+                        {% if album.disabled %}
+                            <a href="javascript:void(0)" target="_blank" title="专辑已注销"> {{ album.title }}</a>
+                            <span class="label label-default pull-right">专辑已注销</span>
+                        {% elif not album.confirmed %}
+                            <a href="javascript:void(0)" target="_blank" title="审核未通过"> {{ album.title }}</a>
+                            <span class="label label-default pull-right">审核未通过</span>
+                        {% else %}
+                            <a href="{{ url_for('main.album', album_id=album.id) }}" target="_blank"> {{ album.title }}</a>
+                            <span class="label label-success pull-right">审核已通过</span>
+                        {% endif %}
+                    </h5>
+                    <p class="small" style="text-indent: 2em">
+                        {{ album.introduction|striptags|truncate(length=255, killwords=False, end="......") }}
+                    </p>
+                    <a href="{{ url_for('main.user', username=album.creator.username) }}" title="作者"><span class="label label-success"><i class="glyphicon glyphicon-user"></i> {{ album.creator.username }}</span></a>
+                    {% if album.confirmed %}
+                        <span class="label label-primary" title="文章总数"><i class="glyphicon glyphicon-book"></i> {{ album.all_true_posts.items|length() }}<a class="btn btn-xs" href="{{ url_for('auth.manage_articles', album_id=album.id) }}"><span class="badge">{{ album.unconfirmed_posts|length }}</span></a></span>
+                        <!--<span class="label label-info" title="评论总数"><i class="glyphicon glyphicon-comment"></i> 2566<a class="btn btn-xs" href="#"><span class="badge">68</span></a></span>-->
+                        <span class="label label-warning" title="订阅总数"><i class="glyphicon glyphicon-bookmark"></i> 2566</span>
+                        <!--<span class="label label-danger" title="总好评率"><i class="glyphicon glyphicon-thumbs-up"></i> 100%</span>-->
+                    {% endif %}
+                        <span class="label label-default" title="创建时间"><i class="glyphicon glyphicon-calendar"></i> {{ moment(album.timestamp).format('LL') }}</span>
+                </div>
+                <div class="col-xs-12 col-md-3 col-lg-2">
+                    <div class="btn-group" style="margin-top: 30px">
+                        {% if album.disabled %}
+                            <a class="btn btn-xs btn-primary disabled" href="javascript:void(0)"><i class="glyphicon glyphicon-magnet"></i> | 审核</a>
+                            <a class="btn btn-xs btn-primary disabled"><i class="glyphicon glyphicon-list"></i></a>
+                        {% else %}
+                            <a class="btn btn-xs btn-primary" href="{{ url_for('auth.album_manage', album_id=album.id) }}"><i class="glyphicon glyphicon-magnet"></i> | 审核</a>
+                            <a class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-list"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <!-- pagination 分页 -->
+    <nav class="text-center">
+        <ul class="pagination">
+            <li {% if not albums.has_prev %}class="disabled"{% endif %}>
+                <a href="{% if albums.has_prev %}{{ url_for('.albums', page=albums.page - 1) }}{% else %}#{% endif %}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% for p in albums.iter_pages() %}
+                {% if p %}
+                    {% if p == albums.page %}
+                    <li class="active"><a href="{{ url_for('.albums', page=p) }}">{{ p }}</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('.albums', page=p) }}">{{ p }}</a></li>
+                    {% endif %}
+                {% else %}
+                <li class="disabled"><a href="#">&hellip;</a></li>
+                {% endif %}
+            {% endfor %}
+            <li {% if not albums.has_next %}class="disabled"{% endif %}>
+                <a href="{% if albums.has_next %}{{ url_for('.my_albums', page=albums.page + 1) }}{% else %}#{% endif %}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <!-- end pagination 分页 -->
+{% endblock %}

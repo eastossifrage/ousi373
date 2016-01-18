@@ -1,0 +1,81 @@
+{% extends 'auth/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    用户管理
+{% endblock %}
+{% block content %}
+    <div class="col-md-6 col-lg-6 col-md-offset-6 col-lg-offset-6">
+        <form role="form" method="post">
+            {{ searchUserForm.hidden_tag() }}
+            <div class="input-group pull-right">
+                {{ searchUserForm.search(class="form-control", placeholder="用户名/真实姓名/手机号", autofoucs="") }}
+                <span class="input-group-btn">
+                    {{ searchUserForm.submit(class='btn btn-primary') }}
+                </span>
+            </div>
+        </form>
+    </div>
+    <h1 class="page-header">
+        用户管理
+
+    </h1>
+    <table class="table table-striped table-hover table-responsive">
+        <thead>
+            <th>序列号</th>
+            <th></th>
+            <th>用户名</th>
+            <th>真实姓名</th>
+            <th>电话</th>
+            <th>权限</th>
+            <th>状态</th>
+        </thead>
+        <tbody>
+        {% for user in users.items %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td>
+                    <a class="btn btn-xs" href="{{ url_for('auth.user', user_id=user.id) }}" title="编辑">
+                        <i class="glyphicon glyphicon-pencil"> </i>
+                    </a>
+                </td>
+                <td><a href="{{ url_for('main.user',username=user.username) }}">{{ user.username }}</a></td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.phone }}</td>
+                <td>{{ user.my_role.name }}</td>
+                {% if user.disabled %}
+                    <td><a class="btn btn-xs btn-danger">注销</a></td>
+                {% else %}
+                    <td><a class="btn btn-xs btn-success">正常</a></td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <!-- pagination 分页 -->
+    <nav class="text-center">
+        <ul class="pagination">
+            <li {% if not users.has_prev %}class="disabled"{% endif %}>
+                <a href="{% if users.has_prev %}{{ url_for('.users', page=users.page - 1) }}{% else %}#{% endif %}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% for p in users.iter_pages() %}
+                {% if p %}
+                    {% if p == users.page %}
+                    <li class="active"><a href="{{ url_for('.users', page=p) }}">{{ p }}</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('.my_users', page=p) }}">{{ p }}</a></li>
+                    {% endif %}
+                {% else %}
+                <li class="disabled"><a href="#">&hellip;</a></li>
+                {% endif %}
+            {% endfor %}
+            <li {% if not users.has_next %}class="disabled"{% endif %}>
+                <a href="{% if users.has_next %}{{ url_for('.my_users', page=users.page + 1) }}{% else %}#{% endif %}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <!-- end pagination 分页 -->
+{% endblock %}

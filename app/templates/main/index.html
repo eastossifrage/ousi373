@@ -1,0 +1,106 @@
+{% extends 'main/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    提升自我，创造未来！
+{% endblock %}
+{% block carousel %}
+<!-- Carousel ================================================== -->
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="item active">
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="First slide">
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1>藕丝有<code>您</code>，更精彩！</h1>
+                    <p style="margin-top: 90px"><a class="btn btn-lg btn-primary" href="{{ url_for('auth.register') }}" role="button">加入我们 ...</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="item">
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAGZmZgAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Second slide">
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1>藕丝需要<code>您</code>！</h1>
+                    <p style="margin-top: 90px"><a class="btn btn-lg btn-primary" href="{{ url_for('auth.register') }}" role="button">成为藕丝客 ...</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="item">
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAFVVVQAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Third slide">
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1><code>您</code>需要藕丝空间！</h1>
+                    <p style="margin-top: 90px"><a class="btn btn-lg btn-primary" href="{{ url_for('auth.register') }}" role="button">我要加入 ...</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+</div><!-- /.carousel -->
+{% endblock %}
+{% block marketing %}
+    {% for album in albums.items %}
+        <!-- START THE FEATURETTES -->
+        {% if loop.index % 2 != 0 %}
+        <div class="row featurette">
+            <div class="col-md-7">
+                <h2 class="featurette-heading"><a href="{{ url_for('main.album', album_id=album.id) }}">{{ album.title }}</a></h2>
+                <p class="lead" style="text-indent: 2em">{{ album.introduction }}</p>
+            </div>
+            <div class="col-md-5">
+                <a href="{{ url_for('main.album', album_id=album.id) }}">
+                    <img class="featurette-image img-responsive" data-src="holder.js/500x500/auto" src="{{ url_for('static', filename="uploads/album/%s" % album.picture_url) }}" alt="Generic placeholder image">
+                </a>
+            </div>
+        </div>
+        {% else %}
+        <hr class="featurette-divider">
+        <div class="row featurette">
+            <div class="col-md-5">
+                <a href="{{ url_for('main.album', album_id=album.id) }}">
+                    <img class="featurette-image img-responsive" data-src="holder.js/500x500/auto" src="{{ url_for('static', filename="uploads/album/%s" % album.picture_url) }}" alt="Generic placeholder image">
+                </a>
+            </div>
+            <div class="col-md-7">
+                <h2 class="featurette-heading"><a href="{{ url_for('main.album', album_id=album.id) }}">{{ album.title }}</a></h2>
+                <p class="lead" style="text-indent: 2em">{{ album.introduction }}</p>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+<!-- /END THE FEATURETTES -->
+<!-- pagination 分页 -->
+<nav class="text-center">
+    <ul class="pagination pagination-lg">
+        <li {% if not albums.has_prev %}class="disabled"{% endif %}>
+            <a href="{% if albums.has_prev %}{{ url_for('.index', page=albums.page - 1) }}{% else %}#{% endif %}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        {% for p in albums.iter_pages() %}
+        {% if p %}
+            {% if p == albums.page %}
+            <li class="active"><a href="{{ url_for('.index', page=p) }}">{{ p }}</a></li>
+            {% else %}
+            <li><a href="{{ url_for('.index', page=p) }}">{{ p }}</a></li>
+            {% endif %}
+        {% else %}
+        <li class="disabled"><a href="#">&hellip;</a></li>
+        {% endif %}
+        {% endfor %}
+        <li {% if not albums.has_next %}class="disabled"{% endif %}>
+            <a href="{% if albums.has_next %}{{ url_for('.index', page=albums.page + 1) }}{% else %}#{% endif %}" aria-label="Next">
+            <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+<!-- end pagination 分页 -->
+{% endblock %}

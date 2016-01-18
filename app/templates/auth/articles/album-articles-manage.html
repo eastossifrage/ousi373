@@ -1,0 +1,74 @@
+{% extends 'auth/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    文章管理
+{% endblock %}
+{% block content %}
+    <h1 class="page-header">
+        文章管理 —— <a href="{{ url_for('auth.manage_articles', album_id=album.id) }}"><small>{{ album.title }}</small></a>
+    </h1>
+    {% for post in album.all_posts.items %}
+        {% if not post.disabled %}
+        <div class="panel">
+            <div class="panel-body">
+                <div class="col-xs-12 col-md-3 col-lg-2">
+                    <a href="{{ url_for('main.user', username=post.author.username) }}" title="{{ post.author.username }}">
+                        <img  class="img-circle" src="{{ post.author.gravatar(size=256) }}" style="height: 100px">
+                    </a>
+                </div>
+                <div class="col-xs-12 col-md-9 col-lg-8">
+                    <h5><a href="{{ url_for('auth.post_manage', post_id=post.id) }}"> {{ post.title }}</a>
+                        {% if not post.confirmed %}
+                            <span class="label label-default pull-right">审核未通过</span>
+                        {% elif post.disabled %}
+                            <span class="label label-default pull-right">文章已注销</span>
+                        {% else %}
+                            <span class="label label-success pull-right">审核已通过</span>
+                        {% endif %}
+                    </h5>
+                    <p class="small" style="text-indent: 2em">
+                        {{ post.body_html|striptags|truncate(length=200, killwords=False, end="......") }}
+                    </p>
+                    <span class="label label-info">0 评论</span>
+                    <span class="label label-warning">0 收藏</span>
+                    <span class="label label-danger"><i class="glyphicon glyphicon-thumbs-up"></i> 0%</span>
+                    <span class="label label-default" title="创建时间"><i class="glyphicon glyphicon-calendar"></i> {{ moment(post.timestamp).format('LL') }}</span>
+                </div>
+                <div class="col-xs-12 col-md-3 col-lg-2">
+                    <div class="btn-group" style="margin-top: 30px">
+                        <a class="btn btn-xs btn-primary" href="{{ url_for('auth.post_manage', post_id=post.id) }}"><i class="glyphicon glyphicon-magnet"></i> | 审核</a>
+                        <a class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-list"></i> </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+    <!-- pagination 分页 -->
+    <nav class="text-center">
+        <ul class="pagination pagination">
+            <li {% if not album.all_posts.has_prev %}class="disabled"{% endif %}>
+                <a href="{% if album.all_posts.has_prev %}{{ url_for('..manage_articles', album_id=album.id, page=album.all_posts.page - 1) }}{% else %}#{% endif %}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% for p in album.all_posts.iter_pages() %}
+                {% if p %}
+                    {% if p == album.all_posts.page %}
+                    <li class="active"><a href="{{ url_for('.manage_articles', album_id=album.id, page=p) }}">{{ p }}</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('.manage_articles', album_id=album.id, page=p) }}">{{ p }}</a></li>
+                    {% endif %}
+                {% else %}
+                <li class="disabled"><a href="#">&hellip;</a></li>
+                {% endif %}
+            {% endfor %}
+            <li {% if not album.all_posts.has_next %}class="disabled"{% endif %}>
+                <a href="{% if album.all_posts.has_next %}{{ url_for('.manage_articles', album_id=album.id, page=album.all_posts.page + 1) }}{% else %}#{% endif %}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <!-- end pagination 分页 -->
+{% endblock %}

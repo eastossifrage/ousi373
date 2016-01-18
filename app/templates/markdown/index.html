@@ -1,0 +1,16 @@
+{% extends 'markdown/base.html' %}
+{% block title %}
+    {{ super() }}
+    一次书写，到处使用！
+{% endblock %}
+{% block markdown %}
+    <div class="col-lg-6 col-sm-6 md-html" data-bind-md="md-html"></div>
+    <div contenteditable="true" class="col-lg-6 col-sm-6 markdown"># 文章标题
+    <div>---</div></div>
+    <div class="md-siderbar">
+        <ul class="nav navbar-nav">
+            <li role="presentation" data-toggle="tooltip" data-placement="bottom" title="图片上传"><i class="glyphicon glyphicon-picture"></i> </li>
+            <li role="presentation"><i class="glyphicon glyphicon-question-sign"></i> </li>
+        </ul>
+    </div>
+{% endblock %}

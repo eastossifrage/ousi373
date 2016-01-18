@@ -1,0 +1,86 @@
+{% extends 'auth/common/auditing-base.html' %}
+{% block title %}
+    {{ super() }}
+    {{ post.title }}
+{% endblock %}
+{% block content %}
+    <div class="container content">
+        <h1 class="page-header">
+            <a href="{{ url_for('auth.manage_articles', album_id=post.album.id) }}" class="pull-left">
+                <img class="img-circle" src="{{ url_for('static', filename="uploads/album/%s" % post.album.picture_url) }}" data-toggle="tooltip" data-placement="bottom" title="{{ post.album.title }}" style="height: 30px">
+            </a>
+            {% if not post.confirmed %}
+                <label class="alert-danger" data-toggle="tooltip" data-placement="top" title="审核未通过">{{ post.title }}</label>
+            {% elif post.disabled %}
+                <label class="alert-danger" data-toggle="tooltip" data-placement="top" title="文章已注销">{{ post.title }}</label>
+            {% else %}
+                <label class="alert-success" data-toggle="tooltip" data-placement="top" title="审核已通过">{{ post.title }}</label>
+            {% endif %}
+            <h6>
+                <a href="{{ url_for('main.user', username=post.author.username) }}" title="作者"><span class="label label-success"><i class="glyphicon glyphicon-user"></i> {{ post.author.username }}</span></a>
+                <span class="label label-danger" title="文章资费"><i class="glyphicon glyphicon-yen"></i> {{ post.price|replace('0.0', '免费') }}</span>
+                <span class="label label-default" title="创建时间"><i class="glyphicon glyphicon-calendar"></i> {{ moment(post.timestamp).format('LL') }}</span>
+            </h6>
+        </h1>
+        <div class="col-lg-offset-2 col-lg-8 text-left">
+            <p>
+                {{ post.body_html|safe }}
+            </p>
+        </div>
+        <div class="OnlineService_Bg">
+            <div class="OnlineService_Box">
+                {% if not post.confirmed %}
+                    <div class="text-center">
+                        <form name="myAdoptForm" role="form" method="post">
+                            {{ adoptPostForm.hidden_tag() }}
+                            <a class="btn btn-sm btn-success " onclick="submit_adopt_form()"><h1><i class="glyphicon glyphicon-ok"></i></h1>
+                            审核通过</a>
+                        </form>
+                        <script type="text/javascript">
+                            function submit_adopt_form()
+                            {
+                              document.myAdoptForm.submit();
+                            }
+                        </script>
+                    </div>
+                    <div class="text-center">
+                        <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#rejectModal"><h1><i class="glyphicon glyphicon-remove"></i></h1>
+                        驳回申请</a>
+                    </div>
+                {% else %}
+                    <div class="text-center">
+                        <a class="btn btn-sm btn-danger" data-toggle="modal" data-target="#rejectModal"><h1><i class="glyphicon glyphicon-remove"></i></h1>
+                        驳回申请</a>
+                    </div>
+                {% endif %}
+                <div class="text-center">
+                    <a href="#" class="btn btn-sm btn-default"><h1><i class="glyphicon glyphicon-arrow-up"></i></h1>
+                    返回顶部</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <form name="myRejectForm" role="form" method="post">
+                    {{ rejectPostForm.hidden_tag() }}
+                    <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="rejectModalLabel">驳回请求</h4>
+                    </div>
+                    <div class="modal-body">
+                        {{ rejectPostForm.title(class='form-control', value='《' + post.title + '》发表请求被驳回', style='margin-bottom: 10px') }}
+                        {{ rejectPostForm.content(class='form-control') }}
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                    {{ rejectPostForm.submit(class='btn btn-default',style='margin-top: 0') }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

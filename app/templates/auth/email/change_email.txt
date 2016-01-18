@@ -1,0 +1,6 @@
+尊敬的 {{ user.username }}, 您好！
+    您正在更新您的账户绑定邮箱！
+    请点击下面的链接来确认您的账户：
+    {{ url_for('auth.change_email', token=token, _external=True) }}
+                                                藕丝团队敬上
+    注意：请不要回复该邮件！

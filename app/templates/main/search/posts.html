@@ -1,0 +1,63 @@
+{% extends 'main/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    文章搜索
+{% endblock %}
+{% block content %}
+    {% for post in posts.items %}
+        <div class="panel">
+            <div class="panel-body">
+                <div class="col-xs-12 col-md-3 col-lg-2">
+                    <a href="{{ url_for('main.album', album_id=post.album.id) }}">
+                        <img  class="img-circle" src="{{ url_for('static', filename="uploads/album/%s" % post.album.picture_url) }}" alt="" style="height: 90px">
+                    </a>
+                </div>
+                <div class="col-xs-12 col-md-9 col-lg-8 text-left">
+                    <h5><a href="{{ url_for('main.post', post_id=post.id) }}"> {{ post.title }}</a>
+                        {% if post.disabled %}
+                            <span class="label label-default pull-right">文章已注销</span>
+                        {% elif not post.confirmed %}
+                            <span class="label label-default pull-right">审核未通过</span>
+                        {% else %}
+                            <span class="label label-success pull-right">审核已通过</span>
+                        {% endif %}
+                    </h5>
+                    <p class="small" style="text-indent: 2em">
+                        {{ post.body_html|striptags|truncate(length=200, killwords=False, end="......") }}
+                    </p>
+                    <span class="label label-info"><a href="{{ url_for('main.user', username=post.my_author.username) }}">{{ post.my_author.username }}</a></span>
+                    <span class="label label-warning">{{ post.my_collected }} 收藏</span>
+                    <span class="label label-danger"><i class="glyphicon glyphicon-yen"></i> {{ post.price|replace(0.0, '免费') }}</span>
+                    <span class="label label-default" title="创建时间"><i class="glyphicon glyphicon-calendar"></i> {{ moment(post.timestamp).format('LL') }}</span>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    <!-- pagination 分页 -->
+    <nav class="text-center">
+        <ul class="pagination">
+            <li {% if not posts.has_prev %}class="disabled"{% endif %}>
+                <a href="{% if posts.has_prev %}{{ url_for('.my_articles', page=posts.page - 1) }}{% else %}#{% endif %}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% for p in posts.iter_pages() %}
+                {% if p %}
+                    {% if p == posts.page %}
+                    <li class="active"><a href="{{ url_for('auth.my_articles', page=p) }}">{{ p }}</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('auth.my_articles', page=p) }}">{{ p }}</a></li>
+                    {% endif %}
+                {% else %}
+                <li class="disabled"><a href="#">&hellip;</a></li>
+                {% endif %}
+            {% endfor %}
+            <li {% if not posts.has_next %}class="disabled"{% endif %}>
+                <a href="{% if posts.has_next %}{{ url_for('.my_articles', page=posts.page + 1) }}{% else %}#{% endif %}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <!-- end pagination 分页 -->
+{% endblock %}

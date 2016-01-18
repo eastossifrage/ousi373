@@ -1,0 +1,118 @@
+{% extends 'auth/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    消息管理
+{% endblock %}
+{% block js %}
+    {{ super() }}
+    <script>
+        var $SCRIPT_ROOT = {{ request.script_root|tojson|safe }}
+        $(function(){
+            $('#select_all').click(function () {//全选
+                $('.subBox').prop("checked", $(this).prop('checked'))
+            });
+        });
+
+        function readAction(){
+            document.getElementById('message-read').checked = true;
+            document.message.submit();
+        }
+
+        function allReadAction(){
+            document.all_read.submit();
+        }
+        function checkDeleteAction(){
+            document.getElementById('message-check_delete').checked = true;
+            document.message.submit();
+        }
+    </script>
+{% endblock %}
+{% block content %}
+    <h1 class="page-header">我的消息</h1>
+    {% for message in messages.items %}
+        <form role="form" name="message_{{ message.id }}" method="post">
+            {{ deleteMessageForm.hidden_tag() }}
+            {{ deleteMessageForm.message_id(class='hidden', value=message.id) }}
+        </form>
+        <script>
+            function deleteAction_{{ message.id }}(){
+                document.message_{{ message.id }}.submit();
+            }
+        </script>
+    {% endfor %}
+    <form name="all_read" role="form" method="post">{{ allReadMessageForm.hidden_tag() }}</form>
+    <form name="message" role="form" method="post">
+        {{ messageForm.hidden_tag() }}
+    <table class="table table-hover table-responsive">
+        <thead>
+            <th>
+                <input type="checkbox" id="select_all"> 全选
+                <a style="margin-left: 10px" onclick="readAction()">{{ messageForm.read(class='hidden') }}标记为已读</a>
+                <a style="margin-left: 10px" onclick="allReadAction()">全部标记为已读</a>
+                <a style="margin-left: 10px" onclick="checkDeleteAction()">{{ messageForm.check_delete(class='hidden') }}删除</a>
+            </th>
+        </thead>
+        <tbody>
+        {% for message in messages.items %}
+            {% if not message.read %}
+            <tr>
+                <td>{{ messageForm.checkbox(class='subBox', value=message.id) }} <a onclick="show_{{ message.id }}()" href="javascript:void(0)"><strong>{{ message.title }}</strong></a></td>
+                <td><strong>{{ moment(message.timestamp ).format('LLL') }}</strong></td>
+                <td><strong>{{ message.sender.usernam }}</strong></td>
+                <td><strong><a onclick="deleteAction_{{ message.id }}()">删除</a></strong></td>
+            </tr>
+            {% else %}
+            <tr>
+                <td>{{ messageForm.checkbox(class='subBox', value=message.id) }} <a onclick="show_{{ message.id }}()" href="javascript:void(0)">{{ message.title }}</a></td>
+                <td>{{ moment(message.timestamp ).format('LLL') }}</td>
+                <td>{{ message.sender.usernam }}</td>
+                <td><a onclick="deleteAction_{{ message.id }}()">删除</a></td>
+            </tr>
+            {% endif %}
+            <tr style="display: none" id="content_{{ message.id }}">
+                <td colspan="5">
+                <div class="panel">
+                    <div class="panel-body">
+                        <p>{{ message.content|safe }}</p>
+                        <p class="pull-right">{{ moment(message.timestamp ).format('LLL') }}</p>
+                    </div>
+                </div></td>
+                <script>
+                    function show_{{ message.id }}(){
+                        var content_{{ message.id }} = $("#content_{{ message.id }}");
+                        content_{{ message.id }}.toggle();
+                    }
+                </script>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </form>
+    <!-- pagination 分页 -->
+    <nav class="text-center">
+        <ul class="pagination">
+            <li {% if not messages.has_prev %}class="disabled"{% endif %}>
+                <a href="{% if messages.has_prev %}{{ url_for('.my_messages', page=messages.page - 1) }}{% else %}#{% endif %}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% for p in messages.iter_pages() %}
+                {% if p %}
+                    {% if p == messages.page %}
+                    <li class="active"><a href="{{ url_for('.my_messages', page=p) }}">{{ p }}</a></li>
+                    {% else %}
+                    <li><a href="{{ url_for('.my_messages', page=p) }}">{{ p }}</a></li>
+                    {% endif %}
+                {% else %}
+                <li class="disabled"><a href="#">&hellip;</a></li>
+                {% endif %}
+            {% endfor %}
+            <li {% if not messages.has_next %}class="disabled"{% endif %}>
+                <a href="{% if messages.has_next %}{{ url_for('.my_messages', page=messages.page + 1) }}{% else %}#{% endif %}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <!-- end pagination 分页 -->
+{% endblock %}

@@ -1,0 +1,52 @@
+/* GLOBAL STYLES
+-------------------------------------------------- */
+/* Padding below the footer and lighter body text */
+html, body {
+  overflow: hidden;
+  margin: 0;
+  height: 99%;
+}
+.md-html {
+  height: 100%;
+  outline: none;
+  overflow-y: auto;
+  margin-top: 50px;
+  padding: 10px 20px 0 20px;
+  font-size: 21px;
+  font-weight: 300;
+  line-height: 1.4;
+  color: #5a5a5a;
+}
+.markdown {
+  height: 100%;
+  outline: none;
+  overflow-y: auto;
+  margin-top: 50px;
+  padding: 10px 20px 0 20px;
+  font-size: 21px;
+  font-weight: 300;
+  line-height: 1.4;
+  color: #5a5a5a;
+  background-color: #dadada;
+}
+.md-siderbar{
+  position: fixed;
+  top: 60px;
+  right: 26px
+}
+.md-siderbar li{
+  padding: 5px 10px 0 10px;
+}
+@media (max-width: 768px) {
+  .md-html {
+    height: 50%;
+    margin-top: 10px;
+  }
+  .markdown {
+    height: 50%;
+    margin-top: 1px;
+  }
+  .md-siderbar{
+    top: 51%;
+  }
+}

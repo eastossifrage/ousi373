@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Language" content="zh-CN" />
+<meta name="author" content="emlog" />
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="X-UA-Compatible" content="IE=8" />
+<title>藕丝科技-网关管理系统</title>
+<link href="/static/css/main.css" type=text/css rel=stylesheet>
+<script type="text/javascript" src="/static/js/jquery/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="/static/js/jquery/plugin-cookie.js/"></script>
+</head>
+<body>
+<div id="mainpage">
+<div id="header">
+    <div id="header_logo"><a href="/main" title="返回管理首页">藕丝科技</a></div>
+    <div id="header_menu">
+        
+    <a>藕丝科技欢迎您，</a>
+    <a href="/mfpw"> admin</a><span>|</span>
+        
+	<a href="/logout">退出</a>
+    </div>
+</div>
+<div id="side">
+    <div id="log_mg">
+        <li class="sidebarsubmenu"><a href="/net">网络设置</a></li>
+    	<li class="sidebarsubmenu"><a href="widgets.php" >侧边栏</a></li>
+   	 	<li class="sidebarsubmenu"><a href="navbar.php" >导航</a></li>
+    	<li class="sidebarsubmenu"><a href="page.php" >页面</a></li>
+    	<li class="sidebarsubmenu"><a href="link.php">链接</a></li>
+    	<li class="sidebarsubmenu"><a href="user.php" >用户</a></li>
+    	<li class="sidebarsubmenu"><a href="data.php">数据</a></li>
+    	<li class="sidebarsubmenu"><a href="plugin.php">插件</a></li>
+        <li class="sidebarsubmenu"><a href="template.php">模板</a></li>
+        <li class="sidebarsubmenu"><a href="store.php">应用</a></li>
+        <li class="sidebarsubmenu"><a class="menu_ext_minus">扩展功能</a></li>
+    </div>
+</div>
+<div id="container">
+<div id="admindex">
+<div class="clear"></div>
+<div style="margin-top: 10px;">
+
+<div class="netset">
+<table>
+    <tr>
+    <th>序  号</th>
+    <th>设备名称</th>
+    <th>网络用途</th>
+    <th>网络地址</th>
+    <th>MAC地址</th>
+    <th>网关地址</th>
+    <th>线路类型</th>
+    <th>主用DNS</th>
+    <th>备用DNS</th>
+    <th>设备状态</th>
+    </tr>
+    
+    <div>
+    <tr>
+    <td>1</td>
+    <td>eth1</td>
+    <td>未设置</td>
+    <td>10.0.2.15/24</td>
+    <td>08:00:27:a5:b3:d4</td>
+    <td>10.0.2.2</td>
+    <td>未设置</td>
+    <td>未设置</td>
+    <td>未设置</td>
+    <td>UP</td>
+    </tr>
+    </div>
+
+    <div class="modify" tag="up" style="display: none;">
+    <div class="notice"><span>正在对网卡</span><b>< eth1 ></b><span>进行配置,请谨慎操作！</span>
+    
+    </div>
+        <form class="eth1" method="post" action="">
+        <div style="display:none;"><input id="csrf_token" name="csrf_token" type="hidden" value="1405332351.37##2678dcbf93bbbeb087ae3291e0d7890b45c37ff8"></div>
+        <div><span>设备状态:  </span><select id="state" name="state"><option value="choice"> 选择 </option><option value="UP"> 启用 </option><option value="DOWN"> 停用 </option></select></div>
+        <div><span>网络用途:  </span><select id="purpose" name="purpose"><option value="choice"> 选择 </option><option value="WAN"> WAN </option><option value="LAN"> LAN  </option><option value="VLAN"> VLAN </option></select></div>
+        <div><span>线路类型:  </span><select id="isp" name="isp"><option value="choice"> 选择 </option><option value="default"> 默  认 </option><option value="unicom"> 联  通 </option><option value="cmcc"> 移  动 </option><option value="telecom"> 电  信 </option></select></div>
+        <div><span>VLANID:  <span>&nbsp;</span></span><input id="vlanid" name="vlanid" type="text" value=""></div>
+        <div><span>网络地址:  </span><input id="ipaddr" name="ipaddr" type="text" value=""></div>
+        <div><span>网关地址:  </span><input id="gateway" name="gateway" type="text" value=""></div>
+        <div><span>主用DNS:  </span><input id="firdns" name="firdns" type="text" value=""></div>
+        <div><span>备用DNS:  </span><input id="secdns" name="secdns" type="text" value=""></div>
+        <div class="modify-button">
+        <div class="button">
+        <p><input type=submit value=提交>
+        </div>
+        </div>
+        </form>
+    </div>
+    
+    <div>
+    <tr>
+    <td>2</td>
+    <td>eth2</td>
+    <td>未设置</td>
+    <td>未设置</td>
+    <td>08:00:27:ca:9c:14</td>
+    <td>未设置</td>
+    <td>未设置</td>
+    <td>未设置</td>
+    <td>未设置</td>
+    <td>DOWN</td>
+    </tr>
+    </div>
+
+    <div class="modify" tag="up" style="display: none;">
+    <div class="notice"><span>正在对网卡</span><b>< eth2 ></b><span>进行配置,请谨慎操作！</span>
+    
+    </div>
+        <form class="eth2" method="post" action="">
+        <div style="display:none;"><input id="csrf_token" name="csrf_token" type="hidden" value="1405332351.37##2678dcbf93bbbeb087ae3291e0d7890b45c37ff8"></div>
+        <div><span>设备状态:  </span><select id="state" name="state"><option value="choice"> 选择 </option><option value="UP"> 启用 </option><option value="DOWN"> 停用 </option></select></div>
+        <div><span>网络用途:  </span><select id="purpose" name="purpose"><option value="choice"> 选择 </option><option value="WAN"> WAN </option><option value="LAN"> LAN  </option><option value="VLAN"> VLAN </option></select></div>
+        <div><span>线路类型:  </span><select id="isp" name="isp"><option value="choice"> 选择 </option><option value="default"> 默  认 </option><option value="unicom"> 联  通 </option><option value="cmcc"> 移  动 </option><option value="telecom"> 电  信 </option></select></div>
+        <div><span>VLANID:  <span>&nbsp;</span></span><input id="vlanid" name="vlanid" type="text" value=""></div>
+        <div><span>网络地址:  </span><input id="ipaddr" name="ipaddr" type="text" value=""></div>
+        <div><span>网关地址:  </span><input id="gateway" name="gateway" type="text" value=""></div>
+        <div><span>主用DNS:  </span><input id="firdns" name="firdns" type="text" value=""></div>
+        <div><span>备用DNS:  </span><input id="secdns" name="secdns" type="text" value=""></div>
+        <div class="modify-button">
+        <div class="button">
+        <p><input type=submit value=提交>
+        </div>
+        </div>
+        </form>
+    </div>
+    
+    <div>
+    <tr>
+    <td>3</td>
+    <td>eth3</td>
+    <td>未设置</td>
+    <td>未设置</td>
+    <td>08:00:27:da:ed:e4</td>
+    <td>未设置</td>
+    <td>未设置</td>
+    <td>未设置</td>
+    <td>未设置</td>
+    <td>UP</td>
+    </tr>
+    </div>
+
+    <div class="modify" tag="up" style="display: none;">
+    <div class="notice"><span>正在对网卡</span><b>< eth3 ></b><span>进行配置,请谨慎操作！</span>
+    
+    </div>
+        <form class="eth3" method="post" action="">
+        <div style="display:none;"><input id="csrf_token" name="csrf_token" type="hidden" value="1405332351.37##2678dcbf93bbbeb087ae3291e0d7890b45c37ff8"></div>
+        <div><span>设备状态:  </span><select id="state" name="state"><option value="choice"> 选择 </option><option value="UP"> 启用 </option><option value="DOWN"> 停用 </option></select></div>
+        <div><span>网络用途:  </span><select id="purpose" name="purpose"><option value="choice"> 选择 </option><option value="WAN"> WAN </option><option value="LAN"> LAN  </option><option value="VLAN"> VLAN </option></select></div>
+        <div><span>线路类型:  </span><select id="isp" name="isp"><option value="choice"> 选择 </option><option value="default"> 默  认 </option><option value="unicom"> 联  通 </option><option value="cmcc"> 移  动 </option><option value="telecom"> 电  信 </option></select></div>
+        <div><span>VLANID:  <span>&nbsp;</span></span><input id="vlanid" name="vlanid" type="text" value=""></div>
+        <div><span>网络地址:  </span><input id="ipaddr" name="ipaddr" type="text" value=""></div>
+        <div><span>网关地址:  </span><input id="gateway" name="gateway" type="text" value=""></div>
+        <div><span>主用DNS:  </span><input id="firdns" name="firdns" type="text" value=""></div>
+        <div><span>备用DNS:  </span><input id="secdns" name="secdns" type="text" value=""></div>
+        <div class="modify-button">
+        <div class="button">
+        <p><input type=submit value=提交>
+        </div>
+        </div>
+        </form>
+    </div>
+    
+</table>
+</div>
+
+
+
+
+</div>
+</div>
+<div class="clear"></div>
+</div><!--end container-->
+<div id="footer">&copy; <a href="http://www.os373.cn" target="_blank">藕丝科技</a> 版权所有</div>
+</div><!--end mainpage-->
+</body>
+</html>

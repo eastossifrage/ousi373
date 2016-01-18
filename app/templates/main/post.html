@@ -1,0 +1,55 @@
+{% extends 'main/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    {{ post.title }}
+{% endblock %}
+{% block content %}
+    <form role="form" method="post" id="collect">
+        {{ collectForm.hidden_tag() }}
+        <h1 class="page-header">
+            <a href="{{ url_for('main.album', album_id=post.album.id) }}" class="pull-left">
+                <img class="img-circle" src="{{ url_for('static', filename="uploads/album/%s" % post.album.picture_url) }}" data-toggle="tooltip" data-placement="bottom" title="{{ post.album.title }}" style="height: 30px">
+            </a>
+            {{ post.title }}
+            {% if current_user.is_collecting(post=post) or post.is_author(current_user) %}
+                <a class="btn btn-xs btn-warning disabled pull-right" href="javascript:void(0)"><i class="glyphicon glyphicon-star"></i> 收藏</a>
+            {% else %}
+                <a class="btn btn-xs btn-primary pull-right" href="javascript:void(0)" onclick="$('#collect').submit()"><i class="glyphicon glyphicon-star-empty"></i> 收藏</a>
+            {% endif %}
+            <h6>
+                <a href="{{ url_for('main.user', username=post.author.username) }}" title="作者"><span class="label label-success"><i class="glyphicon glyphicon-user"></i> {{ post.author.username }}</span></a>
+                <span class="label label-danger" title="文章资费"><i class="glyphicon glyphicon-yen"></i> {{ post.price|replace(0.0, '免费') }}</span>
+                <span class="label label-default" title="创建时间"><i class="glyphicon glyphicon-calendar"></i> {{ moment(post.timestamp).format('LL') }}</span>
+            </h6>
+        </h1>
+    </form>
+    <!--<div id="advertisement">
+        <p>大家好，我是右侧浮动窗口，默认我是很正常的哦。鼠标下拉看看嘛，我会始终定位在浏览器这里的哦</p>
+    </div>-->
+    <div class="col-lg-offset-2 col-lg-8 text-left">
+        <p>
+            {{ post.body_html|safe }}
+        </p>
+        <nav class="col-lg-12">
+            <ul class="pager">
+                {% if pre_post %}
+                    <li class="previous"><a href="{{ url_for('main.post', post_id=pre_post.id) }}" data-toggle="tooltip" data-placement="bottom" title="{{ pre_post.title }}"><span aria-hidden="true">&larr;</span> 上一篇</a></li>
+                {% else %}
+                    <li class="previous disabled"><a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="没有文章了"><span aria-hidden="true">&larr;</span> 上一篇</a></li>
+                {% endif %}
+                {% if next_post %}
+                    <li class="next"><a href="{{ url_for('main.post', post_id=next_post.id) }}" data-toggle="tooltip" data-placement="bottom" title="{{ next_post.title }}">下一篇<span aria-hidden="true">&rarr;</span></a></li>
+                {% else %}
+                    <li class="next disabled"><a href="javascript:void(0)" data-toggle="tooltip" data-placement="bottom" title="没有文章了">下一篇<span aria-hidden="true">&rarr;</span></a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+{% endblock %}
+{% block js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/portamento-min.js') }}"></script>
+    <script>
+        $('#advertisement').portamento({disableWorkaround: true});
+    </script>
+{% endblock %}

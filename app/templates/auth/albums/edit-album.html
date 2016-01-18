@@ -1,0 +1,47 @@
+{% extends 'auth/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    编辑专辑
+{% endblock %}
+{% block content %}
+    <h1 class="page-header">
+        编辑专辑
+    </h1>
+    <div class="center-auth">
+        <!-- 错误信息form提示 -->
+        {% for field_name, field_errors in editAlbumForm.errors|dictsort if field_errors %}
+            {% for error in field_errors %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>{{ editAlbumForm[field_name].label }}错误：</strong> {{ error }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <!-- 错误信息form提示 end -->
+        <form method="post" role="form" enctype="multipart/form-data">
+            {{ editAlbumForm.hidden_tag() }}
+                <div class='text-center'>
+                    <div class="col-sm-12 col-lg-8">
+                        <img class="img-thumbnail" id="picture" src="{{ url_for('static', filename="uploads/album/%s" % album.picture_url) }}" style="width: 240px; height: 240px">
+                    </div>
+                    <div class="col-sm-12 col-lg-4">
+                        <a href="javascript:void(0)" class="file">
+                            选择封面
+                            {{ editAlbumForm.picture(class="btn btn-lg btn-block") }}
+                        </a>
+                    </div>
+                </div>
+                <div class="input-group col-lg-12">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-book"></i> </span>
+                    {{ editAlbumForm.title(class="form-control", placeholder="专辑标题", value=album.title, required="", autofoucs="") }}
+                </div>
+                {{ editAlbumForm.percentage.label(style="margin-top: 20px")}}
+                {{ editAlbumForm.percentage(class="breadcrumb") }}
+                <div class="input-group col-lg-12">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon glyphicon-list-alt"></i> </span>
+                    {{ editAlbumForm.introduction(class="form-control", placeholder="专辑简介", style="height: 180px") }}
+                </div>
+                {{ editAlbumForm.submit(class="btn btn-primary pull-right") }}
+        </form>
+    </div>
+{% endblock %}

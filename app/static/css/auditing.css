@@ -1,0 +1,5 @@
+﻿
+/*在线客服*/
+.OnlineService_Bg {overflow:hidden;position:fixed;right:10px;bottom:20px;z-index:10;}
+.OnlineService_Box {width:100%;overflow:hidden;}
+.OnlineService_Box .btn{margin-top: 10px}

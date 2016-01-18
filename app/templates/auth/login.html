@@ -1,0 +1,41 @@
+{% extends 'main/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    登录
+{% endblock %}
+{% block content %}
+    <div class="log-reg">
+        {% include 'common/alert.html' %}<!-- flash提示 end -->
+        <!-- 错误信息form提示 -->
+        {% for field_name, field_errors in loginForm.errors|dictsort if field_errors %}
+            {% for error in field_errors %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <strong>{{ loginForm[field_name].label }}错误：</strong> {{ error }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <!-- 错误信息form提示 end -->
+        <form method="post" role="form">
+            {{ loginForm.hidden_tag() }}
+            <div class="input-group input-group-lg">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i> </span>
+                {{ loginForm.email(class="form-control", placeholder="邮箱",required="", autofocus="") }}
+            </div>
+            <div class="input-group input-group-lg">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i> </span>
+                {{ loginForm.password(class="form-control", placeholder="密 码", required="") }}
+            </div>
+            <div class="well-lg">
+                <div class="row pull-left">
+                    {{ loginForm.remember_me() }} {{ loginForm.remember_me.label }}
+                </div>
+                <div class="row pull-right">
+                    <a href="{{ url_for('auth.password_reset_request') }}">忘记密码</a>
+                </div>
+            </div>
+            {{ loginForm.submit(class="btn btn-lg btn-primary pull-right") }}
+            <input class="btn btn-lg btn-primary pull-right" type="reset" value="重 置">
+        </form>
+    </div>
+{% endblock %}

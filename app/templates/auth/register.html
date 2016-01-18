@@ -1,0 +1,38 @@
+{% extends 'main/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    注册
+{% endblock %}
+{% block content %}
+    <div class="log-reg">
+        {% for field_name, field_errors in registerForm.errors|dictsort if field_errors %}
+        {% for error in field_errors %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>{{ registerForm[field_name].label }}错误：</strong> {{ error }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+        <form method="post" role="form">
+            {{ registerForm.hidden_tag() }}
+            <div class="input-group input-group-lg">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i> </span>
+                {{ registerForm.email(class="form-control", placeholder="邮 箱", required="", autofocus="", title="邮箱正确格式：xxx@xxx.xxx") }}
+            </div>
+            <div class="input-group input-group-lg">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i> </span>
+                {{ registerForm.username(class="form-control", placeholder="用户名", required="") }}
+            </div>
+            <div class="input-group input-group-lg">
+                <span class="input-group-addon" ><i class="glyphicon glyphicon-lock"></i> </span>
+                {{ registerForm.password(class="form-control", placeholder="密 码", required="") }}
+            </div>
+            <div class="input-group input-group-lg">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i> </span>
+                {{ registerForm.password2(class="form-control", placeholder="重新输入密码", required="") }}
+            </div>
+            {{ registerForm.submit(class="btn btn-lg btn-primary pull-right") }}
+            <input class="btn btn-lg btn-primary pull-right" type="reset" value="重 置">
+        </form>
+    </div>
+{% endblock %}

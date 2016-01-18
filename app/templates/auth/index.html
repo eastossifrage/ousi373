@@ -1,0 +1,75 @@
+{% extends 'auth/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    管理界面
+{% endblock %}
+{% block content %}
+    <h1 class="page-header">用户资料</h1>
+    {% if current_user.is_user() %}
+        <div class="modal-dialog modal-content">
+            <div class="modal-body">
+                <p>尊敬的<strong>{{ current_user.username }}</strong>，</p><p>您现在还是 <span class="label label-default">一般用户</span>，</p>
+                <p>为了能够使用更多的功能，请升级为 <a class="btn btn-xs btn-primary disabled" href="{{ url_for('auth.to_real') }}">认证用户</a></p>
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    暂不提供用户认证功能！！！
+                </div>
+            </div>
+        </div>
+    {% elif current_user.is_real_user() %}
+        <div class="modal-dialog modal-content">
+            <div class="modal-header">
+                <div class="col-xs-offset-10">
+                    <a class="btn btn-xs btn-primary" href="{{ url_for('auth.edit_real_user') }}"><i class="glyphicon glyphicon-pencil"></i> 编辑</a>
+                </div>
+            </div>
+            <div class="modal-body text-center">
+                <img class="img-circle" src="{{ current_user.gravatar(size=256) }}" style="width: 120px; height: 120px">
+                <div class="center-block" style="margin: 0 15% 0 15%">
+                    <h4><strong>{{ current_user.username }}</strong></h4>
+                    <h5><span class="label label-info">认证用户</span></h5>
+                    <p><label>电子邮箱：</label><a href="mailto:{{ current_user.email }}">{{ current_user.email }}</a></p>
+                    <p><label>手机号码：</label>{{ current_user.phone|replace(None, '') }}</p>
+                    <p class="small"><label>注册时间：</label>{{ moment(current_user.member_since).format('LLL') }}</p>
+                    <p><label>个人简介：</label></p>
+                    <p>{{ current_user.about_me|replace(None, '这家伙很懒，什么都没有留下......') }}</p>
+                </div>
+            </div>
+        </div>
+    {% elif current_user.is_moderator() %}
+        <div class="modal-dialog modal-content">
+            <div class="modal-header">
+                <div class="col-xs-offset-10">
+                    <a class="btn btn-xs btn-primary" href="{{ url_for('auth.edit_real_user') }}"><i class="glyphicon glyphicon-pencil"></i> 编辑</a>
+                </div>
+            </div>
+            <div class="modal-body text-center">
+                <img class="img-circle" src="{{ current_user.gravatar(size=256) }}" style="width: 120px; height: 120px">
+                <div class="center-block" style="margin: 0 15% 0 15%">
+                    <h4><strong>{{ current_user.username }}</strong></h4>
+                    <h5><span class="label label-danger">协管员</span></h5>
+                    <p><label>电子邮箱：</label><a href="mailto:{{ current_user.email }}">{{ current_user.email }}</a></p>
+                    <p><label>手机号码：</label>{{ current_user.phone|replace(None, '') }}</p>
+                    <p class="small"><label>注册时间：</label>{{ moment(current_user.member_since).format('LLL') }}</p>
+                    <p><label>个人简介：</label></p>
+                    <p>{{ current_user.about_me|replace(None, '这家伙很懒，什么都没有留下......') }}</p>
+                </div>
+            </div>
+        </div>
+    {% elif current_user.is_administrator() %}
+        <div class="modal-dialog modal-content">
+            <div class="modal-header">
+                <div class="col-xs-offset-10">
+                    <a class="btn btn-xs btn-primary" href="{{ url_for('auth.edit_real_user') }}"><i class="glyphicon glyphicon-pencil"></i> 编辑</a>
+                </div>
+            </div>
+            <div class="modal-body text-center">
+                <img class="img-circle" src="{{ current_user.gravatar(size=256) }}" style="width: 120px; height: 120px">
+                <div class="center-block" style="margin: 0 15% 0 15%">
+                    <h4><strong>{{ current_user.username }}</strong></h4>
+                    <h5><span class="label label-danger">超级管理员</span></h5>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

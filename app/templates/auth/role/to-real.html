@@ -1,0 +1,56 @@
+{% extends 'auth/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    成为认证会员
+{% endblock %}
+{% block content %}
+    <h1 class="page-header">成为认证会员</h1>
+    <div class="center-auth">
+        {% include 'common/alert.html' %}<!-- flash提示 end -->
+         <!-- 错误信息toRealForm提示 -->
+        {% for field_name, field_errors in toRealForm.errors|dictsort if field_errors %}
+            {% for error in field_errors %}
+                <div class="error">
+                    <div class="alert alert-danger alert-dismissible" role="alert" style="margin-top: 20px">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>{{ toRealForm[field_name].label }}错误：</strong> {{ error }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <!-- 错误信息toRealForm提示 end -->
+        <form method="post" role="form" enctype="multipart/form-data">
+            {{ toRealForm.hidden_tag() }}
+                <div class='text-center'>
+                    <div class="col-sm-12 col-lg-8">
+                        <img class="img-circle" id="picture" src="{{ current_user.gravatar(size=256) }}" style="width: 160px; height: 160px">
+                    </div>
+                    <div class="col-sm-12 col-lg-4">
+                        <a href="javascript:void(0)" class="file">
+                            选择头像
+                            {{ toRealForm.picture(class="btn btn-lg btn-block") }}
+                        </a>
+                    </div>
+                </div>
+                <div class="input-group col-lg-12">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i> </span>
+                    {{ toRealForm.name(class="form-control", placeholder="真实姓名", value=current_user.name|replace(None,''), required="", autofoucs="") }}
+                </div>
+
+                <div class="input-group col-lg-12">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i> </span>
+                    {{ toRealForm.phone(class="form-control", placeholder="电话", value=current_user.phone|replace(None,''), required="") }}
+                </div>
+
+                <div class="input-group col-lg-12">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon glyphicon-list-alt"></i> </span>
+                    {{ toRealForm.about_me(class="form-control", placeholder="个人简介", value=current_user.about_me|replace(None,''), style="height: 180px") }}
+                </div>
+                {{ toRealForm.submit(class="btn btn-primary pull-right") }}
+        </form>
+    </div>
+{% endblock %}
+{% block js %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='js/ousi-base.js') }}"></script>
+{% endblock %}

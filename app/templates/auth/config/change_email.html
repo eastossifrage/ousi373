@@ -1,0 +1,35 @@
+{% extends 'auth/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    修改邮箱
+{% endblock %}
+{% block content %}
+    <h1 class="page-header">修改邮箱</h1>
+    <div class="center-auth">
+        {% include 'common/alert.html' %}<!-- flash提示 end -->
+        <!-- 错误信息changePasswordForm提示 -->
+        {% for field_name, field_errors in changeEmailForm.errors|dictsort if field_errors %}
+            {% for error in field_errors %}
+                <div class="error">
+                    <div class="alert alert-danger alert-dismissible" role="alert" style="margin-top: 20px">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>{{ changeEmailForm[field_name].label }}错误：</strong> {{ error }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <!-- 错误信息changePasswordForm提示 end -->
+        <form method="post" role="form">
+            {{ changeEmailForm.hidden_tag() }}
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i> </span>
+                {{ changeEmailForm.password(class="form-control", placeholder="当前密码", maxlength="64", required="") }}
+            </div>
+            <div class="input-group" >
+                <span class="input-group-addon"><i class="glyphicon glyphicon-envelope"></i> </span>
+                {{ changeEmailForm.email(class="form-control", maxlength="64", value=current_user.email, required="") }}
+            </div>
+            {{ changeEmailForm.submit(class="btn btn-primary pull-right") }}
+        </form>
+    </div>
+{% endblock %}

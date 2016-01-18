@@ -1,0 +1,36 @@
+{% extends 'auth/common/base.html' %}
+{% block title %}
+    {{ super() }}
+    修改昵称
+{% endblock %}
+{% block content %}
+    <h1 class="page-header">修改昵称</h1>
+    <div class="center-auth">
+        {% include 'common/alert.html' %}<!-- flash提示 end -->
+        <!-- 错误信息changeUsernameForm提示 -->
+        {% for field_name, field_errors in changeUsernameForm.errors|dictsort if field_errors %}
+            {% for error in field_errors %}
+                <div class="error">
+                    <div class="alert alert-danger alert-dismissible" role="alert" style="margin-top: 20px">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <strong>{{ changeUsernameForm[field_name].label }}错误：</strong> {{ error }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <!-- 错误信息changeUsernameForm提示 end -->
+        <form method="post" role="form">
+            {{ changeUsernameForm.hidden_tag() }}
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i> </span>
+                {{ changeUsernameForm.password(class="form-control", placeholder="当前密码", required="") }}
+            </div>
+
+            <div class="input-group">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i> </span>
+                {{ changeUsernameForm.username(class="form-control", value=current_user.username, required="") }}
+            </div>
+            {{ changeUsernameForm.submit(class="btn btn-primary pull-right") }}
+        </form>
+    </div>
+{% endblock %}
